@@ -16,12 +16,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Скопировать пример файла с переменной окружения:
-```
-сp .env.example .env
-```
-
-Вставить токен своего бота в файл .env:
+Создать файл *.env*, записав в него API токен своего бота (для привязки к проекту):
 ```
 echo "API_TOKEN=<your_token>" > .env
 ```
