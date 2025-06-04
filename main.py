@@ -12,7 +12,7 @@ logging.basicConfig(
     level=logging.INFO,  # задает уровень логирования - INFO и выше (INFO, DEBUG, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # задает формат сообщений
     handlers=[
-        logging.FileHandler("log/bot.log"),  # запись логов в файл
+        logging.FileHandler("bot/log/bot.log"),  # запись логов в файл
         logging.StreamHandler()  # вывод логов в консоль
     ]
 )
