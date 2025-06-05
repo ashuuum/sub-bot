@@ -2,12 +2,12 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from datetime import datetime # для преобразования даты
-from core.app import get_user_subscriptions, update_subscription, parse_date  # для работы с БД и датами
-from core.keyboards import get_main_keyboard # для получения основной клавиатуры
+from datetime import datetime  # преобразование даты
+from core.app import get_subscriptions_db, update_subscription_db  # рабрта с БД
+from core.keyboards import get_main_keyboard  # основная клавиатура
 
 
-router = Router() # создание объекта роутера — в него будут добавляться хендлеры
+router = Router() # создание роутера — в него будут добавляться хендлеры
 
 
 # --- Состояние для редактирования подписки ---
@@ -22,7 +22,7 @@ class EditSubscriptionState(StatesGroup):
 async def edit_subscription(message: Message):
     user_id = message.from_user.id  # получение ID пользователя из сообщения
 
-    subscriptions = get_user_subscriptions(user_id)  # получение подписок пользователя
+    subscriptions = get_subscriptions_db(user_id)  # получение подписок пользователя
 
     if subscriptions:
         # Создание inline-клавиатуры с кнопками по одной на каждую подписку
@@ -32,8 +32,7 @@ async def edit_subscription(message: Message):
         # Вывод пользователю сообщения и клавиатуры
         await message.reply("Выберите подписку для редактирования:", reply_markup=keyboard)
     else:
-        # Вывод сообщения в случае отсутствуя подписок и отображение начальной клавиатуры
-        await message.reply("У вас нет активных подписок.", reply_markup=get_main_keyboard())
+        await message.reply("У вас нет активных подписок", reply_markup=get_main_keyboard())
 
 
 # --- Хендлер: пользователь нажал кнопку с конкретной подпиской ---
@@ -45,7 +44,7 @@ async def process_edit_subscription(call: CallbackQuery, state: FSMContext):
 
     # Вывод просьбы указать новые данные
     await call.message.answer(
-        f"Введите новые данные для '{old_name}' в формате: имя, стоимость, дата окончания (ДД.ММ.ГГГГ)")
+        f"Введите новые данные для подписки '{old_name}' в формате: имя, стоимость, дата окончания (ДД.ММ.ГГГГ)")
     await state.set_state(EditSubscriptionState.waiting_for_new_data)  # устанавливается состояние ожидания ввода
 
 
@@ -63,12 +62,11 @@ async def process_edit_data(message: Message, state: FSMContext):
         end_date = datetime.strptime(end_date, "%d.%m.%Y").strftime("%Y-%m-%d")  # конвертирование формата даты
 
         # Обновление подписки в базе данных
-        update_subscription(user_id, old_name, name, cost, end_date)
+        update_subscription_db(user_id, old_name, name, cost, end_date)
 
         # Вывод сообщения об успешном обновлении подписки
-        await message.answer(f"Подписка '{name}' обновлена!\nНовая стоимость: {cost} руб."
+        await message.answer(f"Подписка '{name}' обновлена!\nСтоимость: {cost} руб."
                              f"\nДата окончания: {end_date}.", reply_markup=get_main_keyboard())
         await state.clear()  # сброс состояния FSM
     except ValueError:
-        # Вывод сообщения об ошибки
         await message.reply("Ошибка в формате данных. Убедитесь, что вы используете: имя, стоимость, дата (ДД.ММ.ГГГГ)")

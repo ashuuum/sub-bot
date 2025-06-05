@@ -1,6 +1,5 @@
 import os
 import sqlite3
-from datetime import datetime
 from dotenv import load_dotenv  # работа с .env
 
 
@@ -27,31 +26,36 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 ''')
 conn.commit()
 
-# Функция возвращает список подписок пользователя
-def get_user_subscriptions(user_id: int):
-    cursor.execute('SELECT name FROM subscriptions WHERE user_id = ?', (user_id,))
-    return cursor.fetchall()
 
 # Функция добавляет новую подписку
-def add_subscription(user_id, name, cost, end_date):
+def add_subscription_db(user_id, name, cost, end_date):
     cursor.execute(
         '''INSERT INTO subscriptions (user_id, name, cost, end_date) VALUES (?, ?, ?, ?)''',
         (user_id, name, cost, end_date)
     )
     conn.commit()
 
-# Функция обновляет подписку пользователя
-def update_subscription(user_id: int, old_name: str, new_name: str, cost: float, end_date: str):
+# Функция возвращает список подписок пользователя
+def get_subscriptions_db(user_id: int):
+    cursor.execute('SELECT name FROM subscriptions WHERE user_id = ?', (user_id,))
+    return cursor.fetchall()
+
+# Функция изменяет подписку пользователя
+def update_subscription_db(user_id: int, old_name: str, new_name: str, cost: float, end_date: str):
     cursor.execute('UPDATE subscriptions SET name = ?, cost = ?, end_date = ? WHERE user_id = ? AND name = ?',
         (new_name, cost, end_date, user_id, old_name)
     )
     conn.commit()
 
+# # Функция добавляет новую подписку
+# def add_subscription(user_id, name, cost, end_date):
+#     cursor.execute(
+#         '''INSERT INTO subscriptions (user_id, name, cost, end_date) VALUES (?, ?, ?, ?)''',
+#         (user_id, name, cost, end_date)
+#     )
+#     conn.commit()
+
 # Возвращает список подписок, срок действия которых истекает в заданную дату
 def get_expiring_subscriptions(date: str):
     cursor.execute('SELECT user_id, name FROM subscriptions WHERE end_date = ?', (date,))
     return cursor.fetchall()
-
-# Функция преобразует дату из формата ДД.MM.ГГГГ в формат ГГГГ-ММ-ДД
-def parse_date(date_str: str) -> str:
-    return datetime.strptime(date_str, "%d.%m.%Y").strftime("%Y-%m-%d")
