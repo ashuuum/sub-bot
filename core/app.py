@@ -12,7 +12,7 @@ API_TOKEN = os.getenv("API_TOKEN")  # чтение переменной окру
 
 # --- Работа с базой данных ---
 
-conn = sqlite3.connect("../../subscriptions.db", check_same_thread=False) # подключение к базе данных SQLite
+conn = sqlite3.connect("core/sub.db", check_same_thread=False) # подключение к базе данных SQLite
 cursor = conn.cursor() # получение курсора для выполнения SQL-запроса
 
 # Создание таблицы, если она не существует

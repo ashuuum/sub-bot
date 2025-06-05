@@ -1,6 +1,6 @@
 from aiogram import Router, types, F
-from bot.core.app import cursor
-from bot.core.keyboards import get_main_keyboard
+from core.app import cursor
+from core.keyboards import get_main_keyboard
 
 router = Router()
 

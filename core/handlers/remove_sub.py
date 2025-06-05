@@ -1,9 +1,9 @@
 from aiogram import Router, types, F
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.core.app import cursor, conn
-from bot.core.keyboards import get_main_keyboard
+from core.app import cursor, conn
+from core.keyboards import get_main_keyboard  # для получения основной клавиатуры
 
-router = Router()
+router = Router()  # создание объекта роутера — в него будут добавляться хендлеры
 
 @router.message(F.text == "Удалить подписку")
 async def remove_subscription(message: types.Message):

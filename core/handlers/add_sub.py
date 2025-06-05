@@ -1,8 +1,8 @@
 import logging  # для логирования
 from aiogram import Router, types, F
 from datetime import datetime  # для обработки даты
-from bot.core.app import add_subscription  # для работы с БД
-from bot.core.keyboards import get_main_keyboard  # для получения основной клавиатуры
+from core.app import add_subscription  # для работы с БД
+from core.keyboards import get_main_keyboard  # для получения основной клавиатуры
 
 
 router = Router() # создание объекта роутера — в него будут добавляться хендлеры

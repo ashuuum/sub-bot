@@ -3,8 +3,8 @@ from aiogram import Bot
 from datetime import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler  # работа с планировщиком задач
 
-from bot.core.app import API_TOKEN
-from bot.core.app import get_expiring_subscriptions
+from core.app import API_TOKEN
+from core.app import get_expiring_subscriptions
 
 
 # --- Загрузка конфигурации ---

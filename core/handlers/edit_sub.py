@@ -3,8 +3,9 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from datetime import datetime # для преобразования даты
-from bot.core.app import get_user_subscriptions, update_subscription, parse_date  # для работы с БД и датами
-from bot.core.keyboards import get_main_keyboard # для получения основной клавиатуры
+from core.app import get_user_subscriptions, update_subscription, parse_date  # для работы с БД и датами
+from core.keyboards import get_main_keyboard # для получения основной клавиатуры
+
 
 router = Router() # создание объекта роутера — в него будут добавляться хендлеры
 

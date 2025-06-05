@@ -4,7 +4,7 @@ from aiogram import Router
 from .start import router as start_router
 from .add_sub import router as add_subscription_router
 from .list_sub import router as list_subscriptions_router
-from .remove_subscription import router as remove_subscription_router
+from .remove_sub import router as remove_subscription_router
 from .edit_sub import router as edit_subscription_router
 from .statistics import router as statistics_router
 
