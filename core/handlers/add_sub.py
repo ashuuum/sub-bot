@@ -1,5 +1,7 @@
 import logging  # логирование
-from aiogram import Router, types, F
+from aiogram import Router, F, types  # импорт основных компонентов aiogram
+from aiogram.fsm.state import StatesGroup, State  # импорт классов для состояний FSM
+from aiogram.fsm.context import FSMContext  # импорт контекста FSM
 from datetime import datetime  # обработка даты
 from core.app import add_subscription_db  # работа с БД
 from core.keyboards import get_main_keyboard  # основная клавиатура
@@ -9,18 +11,22 @@ router = Router()  # создание роутера — в него будут 
 logger = logging.getLogger(__name__)  # получение логгера для текущего модуля
 
 
-# --- Хендлер: пользователь нажал кнопку "Добавить подписку" ---
+# --- Состояния FSM для добавления подписки ---
+class AddSubState(StatesGroup):
+    waiting_for_sub_data = State()  # ожидание ввода данных пользователем
 
+
+# --- Хендлер: пользователь нажал кнопку "Добавить подписку" ---
 @router.message(F.text == "Добавить подписку")
-async def add_subscription(message: types.Message):
+async def add_subscription(message: types.Message, state: FSMContext):
     logger.info(f"Пользователь {message.from_user.id} выполнил запрос на добавление подписки")  # логирование
     await message.answer("Введите через запятую название подписки, стоимость, дату окончания (ДД.ММ.ГГГГ)")
+    await state.set_state(AddSubState.waiting_for_sub_data)  # установка состояния ожидания ввода
 
 
 # --- Хендлер: пользователь ввёл данные подписки ---
-
-@router.message(lambda message: len(message.text.split(',')) == 3 and message.text.startswith("Добавить "))
-async def process_subscription(message: types.Message):
+@router.message(AddSubState.waiting_for_sub_data)
+async def process_subscription(message: types.Message, state: FSMContext):
     user_id = message.from_user.id  # получение ID пользователя из сообщения
     try:
         name, cost, end_date = map(str.strip, message.text.split(','))  # разбиение ввода пользователя
@@ -33,7 +39,8 @@ async def process_subscription(message: types.Message):
 
         # Вывод пользователю сообщения и клавиатуры
         await message.answer(f"Подписка '{name}' добавлена!", reply_markup=get_main_keyboard())
+        await state.clear()  # сброс состояния FSM
     except ValueError as e:
         logger.error(f"Пользователь {message.from_user.id} ввел неверные данные. "
-                     f"Ошибка: {e}") # логирование ошибки
+                     f"Ошибка: {e}")  # логирование ошибки
         await message.reply("Ошибка в формате данных. Убедитесь, что вы используете: имя, стоимость, дата (ДД.ММ.ГГГГ)")
