@@ -19,7 +19,7 @@ async def add_subscription(message: types.Message):
 
 # --- Хендлер: пользователь ввёл данные подписки ---
 
-@router.message(lambda message: len(message.text.split(',')) == 3)
+@router.message(lambda message: len(message.text.split(',')) == 3 and message.text.startswith("Добавить "))
 async def process_subscription(message: types.Message):
     user_id = message.from_user.id  # получение ID пользователя из сообщения
     try:
