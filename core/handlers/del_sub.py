@@ -10,26 +10,26 @@ logger = logging.getLogger(__name__)  # получение логгера для
 
 
 # --- Хендлер: пользователь нажал кнопку "Удалить подписку" ---
-
 @router.message(F.text == "Удалить подписку")
 async def edit_subscription(message: Message):
     user_id = message.from_user.id  # получение ID пользователя из сообщения
 
-    subscriptions = get_subscriptions_db(user_id)  # получение подписок пользователя
+    subscriptions = await get_subscriptions_db(user_id)  # получение подписок пользователя
 
     if subscriptions:
         # Создание inline-клавиатуры с кнопками по одной на каждую подписку
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=name, callback_data=f"delete_{name}")] for (name,) in subscriptions
+            [InlineKeyboardButton(text=sub[0],
+                                  callback_data=f"delete_{sub[0]}")] for sub in
+            subscriptions
         ])
         # Вывод пользователю сообщения и клавиатуры
-        await message.reply("Выберите подписку для редактирования:", reply_markup=keyboard)
+        await message.answer("Выберите подписку для удаления:", reply_markup=keyboard)
     else:
-        await message.reply("У вас нет активных подписок", reply_markup=get_main_keyboard())
+        await message.answer("У вас нет активных подписок", reply_markup=get_main_keyboard())
 
 
 # --- Хендлер: пользователь нажал кнопку с конкретной подпиской ---
-
 @router.callback_query(F.data.startswith("delete_"))
 async def process_delete_subscription(call: types.CallbackQuery):
     user_id = call.from_user.id

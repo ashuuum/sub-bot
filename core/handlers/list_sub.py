@@ -10,13 +10,12 @@ logger = logging.getLogger(__name__) # получение логгера для 
 
 
 # --- Хендлер: пользователь нажал кнопку "Мои подписки" ---
-
 @router.message(F.text == "Мои подписки")
 async def list_subscriptions(message: types.Message):
     logger.info(f"Пользователь {message.from_user.id} выполнил запрос на получения списка подписок")  # логирование
     user_id = message.from_user.id  # получение ID пользователя из сообщения
 
-    subscriptions = get_subscriptions_db(user_id)  # получение списка подписок пользователя
+    subscriptions = await get_subscriptions_db(user_id)  # получение списка подписок пользователя
 
     if subscriptions:
         # Сортировка подписок по дате окончания

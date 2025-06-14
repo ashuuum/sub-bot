@@ -1,13 +1,12 @@
 import asyncio # для запуска асинхронного цикла
 import logging # для ведения логов
 from aiogram import Bot, Dispatcher # импорт класса бота и диспетчера
-from core.app import API_TOKEN
+from core.app import API_TOKEN, init_db
 from core.check_sub import scheduler # импорт токена и планировщика
 from core.handlers import router # импорт роутера с обработчиками
 
 
 # --- Настройка логирования ---
-
 logging.basicConfig(
     level=logging.INFO,  # задает уровень логирования - INFO и выше (INFO, DEBUG, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s",  # задает формат сообщений
@@ -21,6 +20,8 @@ logger = logging.getLogger(__name__) # получение логина для т
 
 async def main():
     logger.info("Запуск бота") # логирование запуска бота
+
+    await init_db()
 
     bot = Bot(token=API_TOKEN) # создание объекта бота, передав в него TOKEN
     dp = Dispatcher() # создание диспетчера для регистрации и обработки событий
