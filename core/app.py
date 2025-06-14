@@ -35,10 +35,12 @@ def add_subscription_db(user_id, name, cost, end_date):
     )
     conn.commit()
 
+
 # Функция возвращает список подписок пользователя
 def get_subscriptions_db(user_id: int):
     cursor.execute('SELECT name FROM subscriptions WHERE user_id = ?', (user_id,))
     return cursor.fetchall()
+
 
 # Функция изменяет подписку пользователя
 def update_subscription_db(user_id: int, old_name: str, new_name: str, cost: float, end_date: str):
@@ -47,13 +49,14 @@ def update_subscription_db(user_id: int, old_name: str, new_name: str, cost: flo
     )
     conn.commit()
 
-# # Функция добавляет новую подписку
-# def add_subscription(user_id, name, cost, end_date):
-#     cursor.execute(
-#         '''INSERT INTO subscriptions (user_id, name, cost, end_date) VALUES (?, ?, ?, ?)''',
-#         (user_id, name, cost, end_date)
-#     )
-#     conn.commit()
+
+# Функция удаляет подписку
+def del_subscription_db(user_id, name):
+    cursor.execute('DELETE FROM subscriptions WHERE user_id = ? AND name = ?',
+                   (user_id, name)
+    )
+    conn.commit()
+
 
 # Возвращает список подписок, срок действия которых истекает в заданную дату
 def get_expiring_subscriptions(date: str):
