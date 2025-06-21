@@ -38,3 +38,4 @@ async def process_subscription(message: types.Message, state: FSMContext):
         await state.clear()  # сброс состояния FSM
     except ValueError:
         await message.reply("Ошибка в формате данных. Убедитесь, что вы используете: имя, стоимость, дата (ДД.ММ.ГГГГ)")
+        await state.clear()  # сброс состояния FSM

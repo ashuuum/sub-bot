@@ -22,7 +22,7 @@ async def edit_subscription(message: Message):
         # Вывод пользователю сообщения и клавиатуры
         await message.answer("Выберите подписку для удаления:", reply_markup=keyboard)
     else:
-        await message.answer("У вас нет активных подписок", reply_markup=get_main_keyboard())
+        await message.answer("🚫 Нет активных подписок", reply_markup=get_main_keyboard())
 
 
 # --- Хендлер: пользователь нажал кнопку с конкретной подпиской ---
@@ -31,4 +31,4 @@ async def process_delete_subscription(call: types.CallbackQuery):
     user_id = call.from_user.id
     name = call.data.replace("delete_", "")
     await del_subscription_db(user_id, name)  # удаление подписки
-    await call.message.answer(f"Подписка '{name}' удалена.", reply_markup=get_main_keyboard())
+    await call.message.answer(f"❌ Подписка '{name}' удалена!", reply_markup=get_main_keyboard())

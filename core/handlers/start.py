@@ -8,7 +8,8 @@ router = Router()
 # --- Хендлер: пользователь ввел "/start" для запуска бота ---
 @router.message(F.text == "/start")
 async def send_welcome(message: types.Message):
-    await message.reply(
-        "Привет! Я бот для отслеживания подписок. Выбери действие:",
-        reply_markup=get_main_keyboard()  # вывод клавиатуры на экран
-    )
+    photo = types.FSInputFile("core/image/title.png")
+    await message.answer_photo(photo,
+                               caption="Привет! Я бот для отслеживания подписок. Выбери действие",
+                               reply_markup=get_main_keyboard()
+                               )

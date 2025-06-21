@@ -5,9 +5,6 @@ from core.check_sub import scheduler
 from core.handlers import router
 
 
-LOG_PATH = "core/file.log"
-
-
 async def main():
     await init_db()
 

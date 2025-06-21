@@ -23,7 +23,7 @@ async def edit_subscription(message: Message):
         ])
         await message.answer("Выберите подписку для редактирования:", reply_markup=keyboard)
     else:
-        await message.answer("У вас нет активных подписок", reply_markup=get_main_keyboard())
+        await message.answer("🚫 Нет активных подписок", reply_markup=get_main_keyboard())
 
 
 # --- Хендлер: пользователь нажал на конкретную подписку ---
