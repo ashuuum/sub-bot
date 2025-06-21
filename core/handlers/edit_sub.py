@@ -1,9 +1,9 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
-
 from core.app import get_subscriptions_db, update_subscription_db
 from core.keyboards import get_main_keyboard
+
 
 router = Router()
 

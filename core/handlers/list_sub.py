@@ -1,4 +1,3 @@
-import logging  # логирование
 from aiogram import Router, types, F
 from datetime import datetime  # преобразование даты
 from core.keyboards import get_main_keyboard  # основная клавиатура
@@ -6,13 +5,11 @@ from core.app import get_subscriptions_db  # работа с БД
 
 
 router = Router()  # создание объекта роутера — в него будут добавляться хендлеры
-logger = logging.getLogger(__name__) # получение логгера для текущего модуля
 
 
 # --- Хендлер: пользователь нажал кнопку "Мои подписки" ---
 @router.message(F.text == "Мои подписки")
 async def list_subscriptions(message: types.Message):
-    logger.info(f"Пользователь {message.from_user.id} выполнил запрос на получения списка подписок")  # логирование
     user_id = message.from_user.id  # получение ID пользователя из сообщения
 
     subscriptions = await get_subscriptions_db(user_id)  # получение списка подписок пользователя
@@ -32,7 +29,7 @@ async def list_subscriptions(message: types.Message):
                 f"Действует до: {formatted_end_date}\n\n"
             )
     else:
-        response = "У вас нет активных подписок"
+        response = "Нет активных подписок"
 
     # Отправляем ответ пользователю
     await message.answer(response, reply_markup=get_main_keyboard(), parse_mode='HTML')

@@ -1,12 +1,10 @@
-import logging  # логирование
 from aiogram import Router, types, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from core.keyboards import get_main_keyboard  # для получения основной клавиатуры
-from core.app import get_subscriptions_db, del_subscription_db  # работа с БД
+from core.keyboards import get_main_keyboard
+from core.app import get_subscriptions_db, del_subscription_db
 
 
 router = Router()  # создание роутера — в него будут добавляться хендлеры
-logger = logging.getLogger(__name__)  # получение логгера для текущего модуля
 
 
 # --- Хендлер: пользователь нажал кнопку "Удалить подписку" ---
@@ -20,9 +18,7 @@ async def edit_subscription(message: Message):
         # Создание inline-клавиатуры с кнопками по одной на каждую подписку
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text=sub[0],
-                                  callback_data=f"delete_{sub[0]}")] for sub in
-            subscriptions
-        ])
+                                  callback_data=f"delete_{sub[0]}")] for sub in subscriptions])
         # Вывод пользователю сообщения и клавиатуры
         await message.answer("Выберите подписку для удаления:", reply_markup=keyboard)
     else:
@@ -35,5 +31,4 @@ async def process_delete_subscription(call: types.CallbackQuery):
     user_id = call.from_user.id
     name = call.data.replace("delete_", "")
     await del_subscription_db(user_id, name)  # удаление подписки
-    logger.info(f"Пользователь {user_id} добавил новую подписку: {name}")  # логирование
     await call.message.answer(f"Подписка '{name}' удалена.", reply_markup=get_main_keyboard())
